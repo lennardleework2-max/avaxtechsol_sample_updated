@@ -28,7 +28,7 @@ class EmployeeModel {
             $params['search2'] = "%$search%";
         }
 
-        $sql = "SELECT recid, employee_id, employee_name, salary
+        $sql = "SELECT recid, employee_id, employee_name, salary, birth_date
                 FROM {$this->table}
                 $whereClause
                 ORDER BY recid DESC
@@ -69,7 +69,7 @@ class EmployeeModel {
      * Get employee by ID
      */
     public function getById($recid) {
-        $stmt = $this->db->prepare("SELECT recid, employee_id, employee_name, salary FROM {$this->table} WHERE recid = :recid LIMIT 1");
+        $stmt = $this->db->prepare("SELECT recid, employee_id, employee_name, salary, birth_date FROM {$this->table} WHERE recid = :recid LIMIT 1");
         $stmt->execute(['recid' => $recid]);
         return $stmt->fetch();
     }
@@ -112,26 +112,27 @@ class EmployeeModel {
     /**
      * Add new employee
      */
-    public function add($employeeId, $employeeName, $salary) {
+    public function add($employeeId, $employeeName, $salary, $birthDate = null) {
         $stmt = $this->db->prepare(
-            "INSERT INTO {$this->table} (employee_id, employee_name, salary)
-             VALUES (:employee_id, :employee_name, :salary)"
+            "INSERT INTO {$this->table} (employee_id, employee_name, salary, birth_date)
+             VALUES (:employee_id, :employee_name, :salary, :birth_date)"
         );
 
         return $stmt->execute([
             'employee_id' => $employeeId,
             'employee_name' => $employeeName,
-            'salary' => number_format((float)$salary, 2, '.', '')
+            'salary' => number_format((float)$salary, 2, '.', ''),
+            'birth_date' => $birthDate ?: null
         ]);
     }
 
     /**
      * Update employee
      */
-    public function update($recid, $employeeId, $employeeName, $salary) {
+    public function update($recid, $employeeId, $employeeName, $salary, $birthDate = null) {
         $stmt = $this->db->prepare(
             "UPDATE {$this->table}
-             SET employee_id = :employee_id, employee_name = :employee_name, salary = :salary
+             SET employee_id = :employee_id, employee_name = :employee_name, salary = :salary, birth_date = :birth_date
              WHERE recid = :recid"
         );
 
@@ -139,7 +140,8 @@ class EmployeeModel {
             'recid' => $recid,
             'employee_id' => $employeeId,
             'employee_name' => $employeeName,
-            'salary' => number_format((float)$salary, 2, '.', '')
+            'salary' => number_format((float)$salary, 2, '.', ''),
+            'birth_date' => $birthDate ?: null
         ]);
     }
 

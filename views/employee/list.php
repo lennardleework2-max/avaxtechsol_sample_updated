@@ -81,6 +81,7 @@
                             <tr>
                                 <th style="width: 50px;">#</th>
                                 <th>Employee ID</th>
+                                <th>Birth Date</th>
                                 <th>Employee Name</th>
                                 <th class="salary-col">Salary</th>
                                 <th style="width: 150px;">Actions</th>
@@ -88,7 +89,7 @@
                         </thead>
                         <tbody id="employeeTableBody">
                             <tr>
-                                <td colspan="5" class="text-center py-4">Loading...</td>
+                                <td colspan="6" class="text-center py-4">Loading...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -142,6 +143,11 @@
                                 <input type="number" class="form-control" id="salary" name="salary"
                                        placeholder="0.00" required min="0" step="0.01">
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="birth_date" class="form-label">Birth Date</label>
+                            <input type="date" class="form-control" id="birth_date" name="birth_date">
                         </div>
 
                         <div id="formAlertContainer"></div>
@@ -199,6 +205,8 @@
                 resetForm();
                 $('#employeeModalTitle').text('Add Employee');
                 generateEmployeeId();
+                $('#employee_id').prop('readonly', true);
+                $('#btnGenerateId').hide();
                 employeeModal.show();
             });
 
@@ -266,7 +274,7 @@
             tbody.empty();
 
             if (employees.length === 0) {
-                tbody.html('<tr><td colspan="5" class="text-center py-4 text-muted">No employees found.</td></tr>');
+                tbody.html('<tr><td colspan="6" class="text-center py-4 text-muted">No employees found.</td></tr>');
             } else {
                 const startIndex = (pagination.current_page - 1) * pagination.per_page;
                 employees.forEach((emp, index) => {
@@ -274,6 +282,7 @@
                         <tr>
                             <td>${startIndex + index + 1}</td>
                             <td>${emp.employee_id}</td>
+                            <td>${emp.birth_date || ''}</td>
                             <td>${emp.employee_name}</td>
                             <td class="salary-col">$${emp.salary}</td>
                             <td>
@@ -382,6 +391,7 @@
                         $('#btnGenerateId').hide();
                         $('#employee_name').val(emp.employee_name);
                         $('#salary').val(emp.salary);
+                        $('#birth_date').val(emp.birth_date);
                         employeeModal.show();
                     } else {
                         showAlert(response.message, 'danger');

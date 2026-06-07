@@ -56,6 +56,7 @@ class EmployeeController {
             return [
                 'recid' => (int)$emp['recid'],
                 'employee_id' => escapeOutput($emp['employee_id']),
+                'birth_date' => $emp['birth_date'] ? escapeOutput($emp['birth_date']) : '',
                 'employee_name' => escapeOutput($emp['employee_name']),
                 'salary' => number_format((float)$emp['salary'], 2)
             ];
@@ -110,7 +111,8 @@ class EmployeeController {
                 'recid' => (int)$employee['recid'],
                 'employee_id' => escapeOutput($employee['employee_id']),
                 'employee_name' => escapeOutput($employee['employee_name']),
-                'salary' => number_format((float)$employee['salary'], 2, '.', '')
+                'salary' => number_format((float)$employee['salary'], 2, '.', ''),
+                'birth_date' => $employee['birth_date'] ? escapeOutput($employee['birth_date']) : ''
             ]
         ]);
     }
@@ -150,7 +152,8 @@ class EmployeeController {
         $data = [
             'employee_id' => isset($_POST['employee_id']) ? sanitizeInput($_POST['employee_id']) : '',
             'employee_name' => isset($_POST['employee_name']) ? sanitizeInput($_POST['employee_name']) : '',
-            'salary' => isset($_POST['salary']) ? $_POST['salary'] : ''
+            'salary' => isset($_POST['salary']) ? $_POST['salary'] : '',
+            'birth_date' => isset($_POST['birth_date']) ? sanitizeInput($_POST['birth_date']) : ''
         ];
 
         $errors = $this->employeeModel->validate($data);
@@ -163,7 +166,8 @@ class EmployeeController {
         $result = $this->employeeModel->add(
             $data['employee_id'],
             $data['employee_name'],
-            $data['salary']
+            $data['salary'],
+            $data['birth_date']
         );
 
         if ($result) {
@@ -206,7 +210,8 @@ class EmployeeController {
         $data = [
             'employee_id' => isset($_POST['employee_id']) ? sanitizeInput($_POST['employee_id']) : '',
             'employee_name' => isset($_POST['employee_name']) ? sanitizeInput($_POST['employee_name']) : '',
-            'salary' => isset($_POST['salary']) ? $_POST['salary'] : ''
+            'salary' => isset($_POST['salary']) ? $_POST['salary'] : '',
+            'birth_date' => isset($_POST['birth_date']) ? sanitizeInput($_POST['birth_date']) : ''
         ];
 
         $errors = $this->employeeModel->validate($data, $recid);
@@ -220,7 +225,8 @@ class EmployeeController {
             $recid,
             $data['employee_id'],
             $data['employee_name'],
-            $data['salary']
+            $data['salary'],
+            $data['birth_date']
         );
 
         if ($result) {
